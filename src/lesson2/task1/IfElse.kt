@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson2.task1
 
 import lesson1.task1.discriminant
@@ -109,14 +110,13 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
     return when {
-        (kingX != rookX1) and (kingX != rookX2) and (kingY != rookY1) and (kingY != rookY2) -> 0
-        ((kingX == rookX1) or (kingY == rookY1)) and ((kingX != rookX2) and (kingY != rookY2)) -> 1
-        ((kingX == rookX2) or (kingY == rookY2)) and ((kingX != rookX1) and (kingY != rookY1)) -> 2
+        (kingX != rookX1) && (kingX != rookX2) && (kingY != rookY1) && (kingY != rookY2) -> 0
+        ((kingX == rookX1) || (kingY == rookY1)) && ((kingX != rookX2) && (kingY != rookY2)) -> 1
+        ((kingX == rookX2) || (kingY == rookY2)) && ((kingX != rookX1) && (kingY != rookY1)) -> 2
         else -> 3
-
     }
-
 }
+
 
 /**
  * Простая
