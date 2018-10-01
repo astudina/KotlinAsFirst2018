@@ -41,17 +41,16 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
 
-fun leapyear(leapornot: Int): Boolean =
-        ((leapornot % 400 == 0) || ((leapornot % 4 == 0) && (leapornot % 100 != 0)))
+fun leapYear(leapOrNot: Int): Boolean =
+        ((leapOrNot % 400 == 0) || ((leapOrNot % 4 == 0) && (leapOrNot % 100 != 0)))
 
-fun daysInMonth(month: Int, year: Int): Int {
-    return when {
-        (month == 2) && leapyear(year) -> 29
-        (month == 2) && !leapyear(year) -> 28
+fun daysInMonth(month: Int, year: Int): Int =
+    when {
+        (month == 2) && leapYear(year) -> 29
+        (month == 2) && !leapYear(year) -> 28
         (month != 2) && (((month < 8) && (month % 2 != 0)) || ((month > 7) && (month % 2 == 0))) -> 31
         else -> 30
     }
-}
 
 
 /**
