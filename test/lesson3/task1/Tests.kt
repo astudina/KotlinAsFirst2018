@@ -156,7 +156,7 @@ class Tests {
     @Test
     @Tag("Normal")
     fun collatzSteps() {
-        assertEquals(0, collatzSteps(1))
+        assertEquals( 0, collatzSteps(1))
         assertEquals(1, collatzSteps(2))
         assertEquals(7, collatzSteps(3))
         assertEquals(5, collatzSteps(5))
