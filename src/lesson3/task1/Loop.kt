@@ -3,6 +3,8 @@
 package lesson3.task1
 
 import lesson1.task1.sqr
+import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.sqrt
 
 /**
@@ -125,7 +127,11 @@ fun lcm(m: Int, n: Int): Int {
 fun minDivisor(n: Int): Int {
     var i = 2
     while (n % i != 0) {
-        i += 1
+        if (i == 2) {
+            i += 1
+        } else {
+            i += 2
+        }
     }
     return i
 }
@@ -136,13 +142,8 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    var i = 2
-    while (n % i != 0) {
-        i += 1
-    }
-    return n / i
-}
+fun maxDivisor(n: Int): Int =
+        n / minDivisor(n)
 
 
 /**
@@ -258,18 +259,8 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean {
-    var a = 0
-    var n1 = n
-    while (n1 > 0) {
-        a = a * 10 + n1 % 10
-        n1 /= 10
-    }
-    return when {
-        a == n -> true
-        else -> false
-    }
-}
+fun isPalindrome(n: Int): Boolean =
+        revert(n) == n
 
 /**
  * Средняя
@@ -302,21 +293,15 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun squareSequenceDigit(n: Int): Int {
-    var c: Int
+    var c = 1
     var k = 0
     var y = 1
-    var x: Int
     while (k < n) {
         c = sqr(y)
-        x = digitNumber(c)
-        k += x
+        k += digitNumber(c)
         y++
     }
-    c = sqr(y - 1)
-    for (i in 1..(k - n)) {
-        c /= 10
-    }
-    return c % 10
+    return findingNumber(n, k, c)
 }
 
 /**
@@ -329,19 +314,22 @@ fun squareSequenceDigit(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun fibSequenceDigit(n: Int): Int {
-    var c: Int
+    var c = 1
     var k = 0
     var y = 1
-    var x: Int
     while (k < n) {
         c = fib(y)
-        x = digitNumber(c)
-        k += x
+        k += digitNumber(c)
         y++
     }
-    c = fib(y - 1)
+    return findingNumber(n, k, c)
+}
+
+
+fun findingNumber(n: Int, k: Int, c: Int): Int {
+    var c1 = c
     for (i in 1..(k - n)) {
-        c /= 10
+        c1 /= 10
     }
-    return c % 10
+    return c1 % 10
 }
