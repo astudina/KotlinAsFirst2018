@@ -145,7 +145,6 @@ fun minDivisor(n: Int): Int {
 fun maxDivisor(n: Int): Int =
         n / minDivisor(n)
 
-
 /**
  * Простая
  *
