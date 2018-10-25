@@ -3,8 +3,6 @@
 package lesson3.task1
 
 import lesson1.task1.sqr
-import kotlin.math.ceil
-import kotlin.math.floor
 import kotlin.math.sqrt
 
 /**
