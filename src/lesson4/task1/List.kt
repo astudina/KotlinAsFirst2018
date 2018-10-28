@@ -135,7 +135,7 @@ fun mean(list: List<Double>): Double = if (list.isNotEmpty()) list.sum() / list.
 fun center(list: MutableList<Double>): MutableList<Double> {
     val ar = mean(list)
     for (i in 0 until list.size) {
-        list[i] = list[i] - ar
+        list[i] -= ar
     }
     return list
 }
@@ -184,11 +184,8 @@ fun polynom(p: List<Double>, x: Double): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
-    for (i in list.size - 1 downTo 0) {
-        for (element in 1..i) {
-            list[i] += list[i - element]
-        }
-
+    for (i in 1 until list.size) {
+        list[i] += list[i - 1]
     }
     return list
 }
@@ -236,9 +233,13 @@ fun factorizeToString(n: Int): String =
 fun convert(n: Int, base: Int): List<Int> {
     var n1 = n
     val result = mutableListOf<Int>()
-    while (n1 != 0) {
-        result.add(n1 % base)
-        n1 /= base
+    if (n1 == 0) {
+        result.add(n)
+    } else {
+        while (n1 != 0) {
+            result.add(n1 % base)
+            n1 /= base
+        }
     }
     return result.reversed()
 }
@@ -292,7 +293,8 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: str = "13c", base = 14 -> 250
  */
-fun decimalFromString(str: String, base: Int): Int = str.toInt(base)
+fun decimalFromString(str: String, base: Int): Int =
+        decimal(str.map { if (it.isDigit()) (it - '0') else (it - 'a' + 10) }, base)
 
 /**
  * Сложная
