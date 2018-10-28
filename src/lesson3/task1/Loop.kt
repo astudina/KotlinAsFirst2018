@@ -69,12 +69,13 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun digitNumber(n: Int): Int {
-    var result = 0
+    var result = 1
     var number = n
-    do {
-        result++
+    if (number / 10 == 0) return 1
+    else while ((number / 10) != 0) {
+        result ++
         number /= 10
-    } while (number > 0)
+    }
     return result
 }
 

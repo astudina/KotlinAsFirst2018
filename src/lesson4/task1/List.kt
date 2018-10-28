@@ -3,7 +3,6 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
-import java.lang.Math.pow
 import kotlin.math.sqrt
 
 /**
@@ -116,34 +115,14 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double {
-    var k = 0
-    for (element in v) {
-        k = (k + element * element).toInt()
-    }
-    return when {
-        k == 0 -> 0.0
-        else -> sqrt(k.toDouble())
-    }
-}
+fun abs(v: List<Double>): Double = sqrt(v.sumByDouble { it * it })
 
 /**
  * Простая
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double {
-    var k = 0.0
-    var x = 0.0
-    for (element in list) {
-        k++
-        x += element
-    }
-    return when {
-        (list.isEmpty()) -> 0.0
-        else -> (x / k)
-    }
-}
+fun mean(list: List<Double>): Double = if (list.isNotEmpty()) list.sum() / list.size else 0.0
 
 /**
  * Средняя
@@ -186,8 +165,10 @@ fun times(a: List<Double>, b: List<Double>): Double {
  */
 fun polynom(p: List<Double>, x: Double): Double {
     var px = 0.0
+    var x1 = 1.0
     for (i in 0 until p.size) {
-        px += p[i] * (pow(x, i.toDouble()))
+        px += p[i] * x1
+        x1 *= x
     }
     return px
 }
@@ -203,10 +184,11 @@ fun polynom(p: List<Double>, x: Double): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
-    var sum = 0.0
-    for (i in 0 until list.size) {
-        list[i] += sum
-        sum = list[i]
+    for (i in list.size - 1 downTo 0) {
+        for (element in 1..i) {
+            list[i] += list[i - element]
+        }
+
     }
     return list
 }
@@ -230,7 +212,7 @@ fun factorize(n: Int): List<Int> {
             i++
         }
     }
-    return result.sorted()
+    return result
 }
 
 /**
@@ -292,11 +274,11 @@ fun convertToString(n: Int, base: Int): String {
  */
 fun decimal(digits: List<Int>, base: Int): Int {
     val digits1 = digits.reversed()
-    var x = 0.0
+    var x = 1
     var result = 0
     for (element in digits1) {
-        result += (element * pow(base.toDouble(), x)).toInt()
-        x++
+        result += (element * x)
+        x *= base
     }
     return result
 }
@@ -310,17 +292,7 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: str = "13c", base = 14 -> 250
  */
-fun decimalFromString(str: String, base: Int): Int {
-    val result = mutableListOf<Int>()
-    for (element in str) {
-        if (element in 'a'..'z') {
-            result.add(element - 'a' + 10)
-        } else {
-            result.add(element.toString().toInt())
-        }
-    }
-    return decimal(result, base)
-}
+fun decimalFromString(str: String, base: Int): Int = str.toInt(base)
 
 /**
  * Сложная
