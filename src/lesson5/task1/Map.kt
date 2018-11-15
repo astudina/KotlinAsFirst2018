@@ -239,7 +239,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
  *
  * Для двух списков людей найти людей, встречающихся в обоих списках
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.filter { it in b }.toList()
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.filter { it in b }
 
 /**
  * Средняя
@@ -250,7 +250,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.filter { it
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = word.all { element -> chars.toString().toLowerCase().contains(element) }
+fun canBuildFrom(chars: List<Char>, word: String): Boolean = word.all { word -> chars.toString().toLowerCase().contains(word.toLowerCase()) }
 
 
 /**
@@ -314,7 +314,7 @@ fun hasAnagrams(words: List<String>): Boolean {
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     for (i in 0 until list.size - 1) {
-        if (list.contains(number - list[i])) return Pair(i, list.subList(i + 1, list.size).indexOf(number - list[i]) + i + 1)
+        if (number != 0 && list.contains(number - list[i])) return Pair(i, list.subList(i + 1, list.size).indexOf(number - list[i]) + i + 1)
     }
     return Pair(-1, -1)
 }
