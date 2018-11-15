@@ -239,7 +239,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
  *
  * Для двух списков людей найти людей, встречающихся в обоих списках
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.filter { it in b }
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.filter { it in b }.toList()
 
 /**
  * Средняя
@@ -250,7 +250,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.filter { it
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = word.all { element -> chars.contains(element) }
+fun canBuildFrom(chars: List<Char>, word: String): Boolean = word.all { element -> chars.toString().toLowerCase().contains(element) }
 
 
 /**
