@@ -148,8 +148,14 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = a.all 
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     val result = mutableMapOf<String, Double>()
+    val number = mutableMapOf<String, Int>()
     for (element in stockPrices) {
-        result[element.first] = (result.getOrDefault(element.first, element.second) + element.second) / 2
+        if (!number.contains(element.first)) number[element.first] = 1
+        else number[element.first] = number[element.first]!! + 1
+    }
+    for (element in stockPrices) {
+        if (!result.contains(element.first)) result[element.first] = element.second / number[element.first]!!
+        else result[element.first] = result[element.first]!! + element.second / number[element.first]!!
     }
     return result
 }
@@ -239,7 +245,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
  *
  * Для двух списков людей найти людей, встречающихся в обоих списках
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.filter { it in b }
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = (a.toSet().intersect(b.toSet())).toList()
 
 /**
  * Средняя
@@ -250,7 +256,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.filter { it
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = word.all { word -> chars.toString().toLowerCase().contains(word.toLowerCase()) }
+fun canBuildFrom(chars: List<Char>, word: String): Boolean = word.all { element -> chars.toString().toLowerCase().contains(element.toLowerCase()) }
 
 
 /**
@@ -314,7 +320,7 @@ fun hasAnagrams(words: List<String>): Boolean {
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     for (i in 0 until list.size - 1) {
-        if (number != 0 && list.contains(number - list[i])) return Pair(i, list.subList(i + 1, list.size).indexOf(number - list[i]) + i + 1)
+        if (list[i] <= number && list.contains(number - list[i])) return Pair(i, list.subList(i + 1, list.size).indexOf(number - list[i]) + i + 1)
     }
     return Pair(-1, -1)
 }
