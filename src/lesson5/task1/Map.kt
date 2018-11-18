@@ -229,15 +229,8 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *     -> a changes to mutableMapOf() aka becomes empty
  */
 fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
-    val elementsToRemove = mutableListOf<String>()
-    for ((element, key) in b) {
-        if ((a[element] == b[element]) and (a[key] == b[key])) {
-            elementsToRemove.add(element)
-        }
-    }
-    for (element in elementsToRemove) {
-        a.remove(element)
-    }
+    for ((key, word) in b)
+        if (word == a[key]) a.remove(key)
 }
 
 /**
@@ -320,7 +313,7 @@ fun hasAnagrams(words: List<String>): Boolean {
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     for (i in 0 until list.size - 1) {
-        if (list[i] <= number && list.contains(number - list[i])) return Pair(i, list.subList(i + 1, list.size).indexOf(number - list[i]) + i + 1)
+        if (list[i] <= number && i != list.indexOf(number - list[i]) && list.contains(number - list[i])) return Pair(i, list.subList(i + 1, list.size).indexOf(number - list[i]) + i + 1)
     }
     return Pair(-1, -1)
 }
