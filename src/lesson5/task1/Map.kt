@@ -2,6 +2,9 @@
 
 package lesson5.task1
 
+import lesson4.task1.mean
+import kotlin.math.max
+
 /**
  * Пример
  *
@@ -119,7 +122,8 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val result = mutableMapOf<Int, List<String>>()
     for ((name, grade) in grades) {
-        result[grade] = ((result[grade] ?: listOf()) + name).sortedDescending()
+        //на самом деле не совсем разобралась с getOrPut, а точнее с дефолтным значением.
+        result[grade] = (result.getOrPut(grade, ::mutableListOf) + listOf(name)).sortedDescending()
     }
     return result
 }
@@ -146,19 +150,8 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = a.all 
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
-    val result = mutableMapOf<String, Double>()
-    val number = mutableMapOf<String, Int>()
-    for (element in stockPrices) {
-        if (!number.contains(element.first)) number[element.first] = 1
-        else number[element.first] = number[element.first]!! + 1
-    }
-    for (element in stockPrices) {
-        if (!result.contains(element.first)) result[element.first] = element.second / number[element.first]!!
-        else result[element.first] = result[element.first]!! + element.second / number[element.first]!!
-    }
-    return result
-}
+fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> =
+        stockPrices.groupBy({ it.first }, { it.second }).mapValues { mean(it.value) }
 
 /**
  * Средняя
@@ -175,17 +168,8 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-    var minPrice = Double.MAX_VALUE
-    var result: String? = null
-    for (element in stuff) {
-        if (element.value.first == kind && element.value.second <= minPrice) {
-            result = element.key
-            minPrice = element.value.second
-        }
-    }
-    return result
-}
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? =
+        stuff.filter { it.value.first == kind }.minBy { it.value.second }?.key
 
 
 /**
@@ -238,7 +222,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
  *
  * Для двух списков людей найти людей, встречающихся в обоих списках
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = (a.toSet().intersect(b.toSet())).toList()
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = (a.intersect(b)).toList()
 
 /**
  * Средняя
@@ -285,10 +269,11 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
 fun hasAnagrams(words: List<String>): Boolean {
     val result = mutableSetOf<List<Char>>()
     for (element in words) {
-        if (element.toSet().sorted() in result) {
+        var sortedElements = element.toSortedSet()
+        if (sortedElements.toList() in result) {
             return true
         } else {
-            result.add(element.toSet().sorted())
+            result.add(sortedElements.toList())
         }
     }
     return false
@@ -312,10 +297,15 @@ fun hasAnagrams(words: List<String>): Boolean {
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    for (i in 0 until list.size - 1) {
-        if (list[i] <= number && i != list.indexOf(number - list[i]) && list.contains(number - list[i])) return Pair(i, list.subList(i + 1, list.size).indexOf(number - list[i]) + i + 1)
+    val map = mutableMapOf<Int, Int>()
+    for ((key, value) in list.withIndex()) {
+        val result = map[number - value]
+        if (result == null)
+            map[value] = key
+        else
+            return Pair(result, key)
     }
-    return Pair(-1, -1)
+    return -1 to -1
 }
 
 /**
@@ -337,4 +327,35 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+
+    var result = setOf<String>()
+    val numberOfTreasures = treasures.size + 1
+    val a: Array<Array<Int>> = Array(numberOfTreasures) { Array(capacity + 1) { 0 } }
+    var x: Int
+    var y: Int
+    for (i in 0 until capacity + 1)
+        a[0][i] = 0
+    for (i in 0 until numberOfTreasures)
+        a[i][0] = 0
+    for (i in 1 until numberOfTreasures)
+        for (j in 1 until capacity + 1) {
+            x = treasures.values.toList()[i - 1].first
+            y = treasures.values.toList()[i - 1].second
+            if (x <= j)
+                a[i][j] = max(a[i - 1][j], a[i - 1][j - x] + y)
+            else {
+                a[i][j] = a[i - 1][j]
+            }
+        }
+    fun findResult(k: Int, s: Int) {
+        if (a[k][s] == 0) return
+        if (a[k - 1][s] == a[k][s]) findResult(k - 1, s)
+        else {
+            findResult(k - 1, s - treasures.values.toList()[k - 1].first)
+            result = result.plus(treasures.keys.toList()[k - 1])
+        }
+    }
+    findResult(numberOfTreasures - 1, capacity)
+    return result
+}
