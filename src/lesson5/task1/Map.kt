@@ -122,7 +122,6 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val result = mutableMapOf<Int, List<String>>()
     for ((name, grade) in grades) {
-        //на самом деле не совсем разобралась с getOrPut, а точнее с дефолтным значением.
         result[grade] = (result.getOrPut(grade, ::mutableListOf) + listOf(name)).sortedDescending()
     }
     return result
@@ -340,7 +339,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
 
     var result = setOf<String>()
     val numberOfTreasures = treasures.size + 1
-    val a: Array<Array<Int>> = Array(numberOfTreasures) { Array(capacity + 1) { 0 } }
+    val a = Array(numberOfTreasures) { Array(capacity + 1) { 0 } }
     var x: Int
     var y: Int
     for (i in 0 until capacity + 1)
