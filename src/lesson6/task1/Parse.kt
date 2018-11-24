@@ -100,7 +100,7 @@ fun dateDigitToStr(digital: String): String {
             "октября", "ноября", "декабря")
     val year = list.last().toInt()
     val day = list.first().toInt()
-    if (!(list[1].toInt() in 1..12)) return ""
+    if ((list[1].toInt() !in 1..12)) return ""
     val month = months[list[1].toInt() - 1]
     if (day !in 1..daysInMonth(list[1].toInt(), year)) return ""
     return String.format("%d %s %d", day, month, year)
