@@ -173,7 +173,7 @@ fun bestHighJump(jumps: String): Int {
     for (i in 0 until list.size) {
         if (list[i].contains("+")) result.add(list[i - 1].toInt())
     }
-    return result.max()!!
+    return result.max() ?: -1
 }
 
 
