@@ -73,13 +73,13 @@ fun main(args: Array<String>) {
  */
 fun dateStrToDigit(str: String): String {
     if (!Regex("\\d{1,2} [а-я]+ \\d+").matches(str)) return ""
-    val list = str.split(" ")
+    val (day1, month1, year1) = str.split(" ")
     val months = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября",
             "октября", "ноября", "декабря")
-    val month = months.indexOf(list[1]) + 1
-    val year = list.last().toInt()
-    val day = list.first().toInt()
-    if (day !in 1..daysInMonth(month, year)) return ""
+    val month = months.indexOf(month1) + 1
+    val year = year1.toInt()
+    val day = day1.toInt()
+    if (day !in 1..daysInMonth(month, year) || (month !in 1..12)) return ""
     return String.format("%02d.%02d.%d", day, month, year)
 }
 
@@ -142,16 +142,18 @@ fun flattenPhoneNumber(phone: String): String {
  */
 fun bestLongJump(jumps: String): Int {
     if (!Regex("""[-%\s\d]+""").matches(jumps) || Regex("[a-z]+|[а-я]+|[~!@#${'$'}^&*+]").matches(jumps)) return -1
-    val result = mutableListOf<Int>()
-    val stringWithoutRubbish = Regex("""[-%]+""").replace(jumps, "")
-    val list = stringWithoutRubbish.split(Regex("""[\s]+"""))
-    try {
-        for (element in list)
-            result.add(element.toInt())
-        return result.max()!!
-    } catch (e: NumberFormatException) {
-        return -1
+    val list = jumps.split(Regex("""[\D]+"""))
+    var result = -1
+    for (element in list) {
+        try {
+            if (element.toInt() > result) {
+                result = element.toInt()
+            }
+        } catch (e: NumberFormatException) {
+            continue
+        }
     }
+    return result
 }
 
 /**
