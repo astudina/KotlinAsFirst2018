@@ -95,15 +95,16 @@ fun dateStrToDigit(str: String): String {
  */
 fun dateDigitToStr(digital: String): String {
     if (!Regex("\\d{1,2}.\\d{2}.\\d+").matches(digital)) return ""
-    val list = digital.split(".")
+    val (day1, month1, year1) = digital.split(".")
     val months = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября",
             "октября", "ноября", "декабря")
-    val year = list.last().toInt()
-    val day = list.first().toInt()
-    if ((list[1].toInt() !in 1..12)) return ""
-    val month = months[list[1].toInt() - 1]
-    if (day !in 1..daysInMonth(list[1].toInt(), year)) return ""
-    return String.format("%d %s %d", day, month, year)
+    val year = year1.toInt()
+    val day = day1.toInt()
+    val month = month1.toInt()
+    if ((month !in 1..12)) return ""
+    val monthTRUE = months[month - 1]
+    if (day !in 1..daysInMonth(month, year)) return ""
+    return String.format("%d %s %d", day, monthTRUE, year)
 }
 
 /**
