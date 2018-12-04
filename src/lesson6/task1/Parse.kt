@@ -122,11 +122,12 @@ fun dateDigitToStr(digital: String): String {
 fun flattenPhoneNumber(phone: String): String {
     if (!Regex("""[-+()\d\s]+""").matches(phone) || Regex("[a-z]+|[а-я]+").matches(phone)) return ""
     val numbers = "+0123456789"
-    var result = ""
-    for (element in phone) {
-        if (element in numbers) result += element
+    fun number() = buildString {
+        for (element in phone) {
+            if (element in numbers) append(element)
+        }
     }
-    return result
+    return number()
 }
 
 
@@ -141,7 +142,7 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    if (!Regex("""[-%\s\d]+""").matches(jumps) || Regex("[a-z]+|[а-я]+|[~!@#${'$'}^&*+]").matches(jumps)) return -1
+    if (!Regex("""[-%\s\d]+""").matches(jumps)) return -1
     val list = jumps.split(Regex("""[\s]+"""))
     var result = -1
     for (element in list) {
@@ -167,9 +168,9 @@ fun bestLongJump(jumps: String): Int {
  * При нарушении формата входной строки вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    if (!Regex("""[\d%+\s\-]+""").matches(jumps) || Regex("[a-z]+|[а-я]+|[~!@#${'$'}^&*]").matches(jumps)) return -1
+    if (!Regex("""[\d%+\s\-]+""").matches(jumps)) return -1
     val list = jumps.split(Regex("""[\s%-]+"""))
-    var result = mutableListOf<Int>()
+    val result = mutableListOf<Int>()
     for (i in 0 until list.size) {
         if (list[i].contains("+")) result.add(list[i - 1].toInt())
     }
@@ -197,7 +198,15 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    var result = 0
+    val words = str.toLowerCase().split(" ")
+    for (i in 0 until words.size - 1) {
+        if (words[i] == words[i + 1]) return result
+        else result += words[i].length + 1
+    }
+    return -1
+}
 
 /**
  * Сложная
@@ -210,7 +219,26 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше либо равны нуля.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val oneProduct = description.split("; ")
+    var maxPrice = -1.0
+    var result = ""
+    try {
+        for (productAndPrice in oneProduct) {
+            if (productAndPrice.split(" ").size != 2) return ""
+            val (product, price) = productAndPrice.split(" ")
+            if (price.toDouble() < 0.0) return ""
+            else
+                if (price.toDouble() > maxPrice) {
+                    result = product
+                    maxPrice = price.toDouble()
+                }
+        }
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+    return result
+}
 
 /**
  * Сложная
@@ -224,6 +252,14 @@ fun mostExpensive(description: String): String = TODO()
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int = TODO()
+/*{
+    if (!Regex("""[LVXICDM]""").matches(roman)) return -1
+    val yesRoman = listOf<String>("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
+    val noRoman = listOf<Int>(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
+    var result = 0
+
+
+} */
 
 /**
  * Очень сложная
